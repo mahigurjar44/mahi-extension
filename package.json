@@ -1,0 +1,53 @@
+{
+  "name": "mahi-ai-assistant",
+  "displayName": "MAHI - AI Assistant",
+  "description": "Machine Assisted Human Intelligence - Your personal AI coding companion",
+  "version": "1.0.0",
+  "publisher": "mahi",
+  "author": "MAHI Team",
+  "icon": "images/logo.png",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mahi-ai/vscode-extension"
+  },
+  "bugs": {
+    "url": "https://github.com/mahi-ai/vscode-extension/issues"
+  },
+  "homepage": "https://github.com/mahi-ai/vscode-extension#readme",
+  "keywords": ["ai", "assistant", "chat", "llm", "coding", "mahi"],
+  "categories": ["Other", "Machine Learning"],
+  "engines": {
+    "vscode": "^1.99.0"
+  },
+  "main": "./out/extension.js",
+  "activationEvents": ["onStartupFinished"],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "mahiAI",
+          "title": "MAHI AI Assistant",
+          "icon": "$(symbol-class)"
+        }
+      ]
+    },
+    "views": {
+      "mahiAI": [
+        {
+          "id": "mahiAIView",
+          "name": "MAHI Chat",
+          "type": "webview"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.99.0",
+    "typescript": "^5.0.0"
+  }
+}
