@@ -38,9 +38,19 @@ Ensure your AI backend is running on `http://localhost:4000`
 git clone https://github.com/mahigurjar44/mahi-backend.git
 cd mahi-backend
 
-# Install and run
-npm install
-npm run start:dev
+# Start dependencies
+docker run -d --name redis -p 6379:6379 redis:7-alpine
+docker run -d --name ollama -p 11434:11434 ollama/ollama
+docker run -d --name qdrant -p 6333:6333 qdrant/qdrant
+
+# Build and run backend
+cd ..
+docker build -t mahi-backend -f mahi-backend/docker/backend/Dockerfile .
+docker run -d -p 4000:3000 \
+  -e LLM_URL=http://host.docker.internal:11434 \
+  -e REDIS_URL=redis://host.docker.internal:6379 \
+  -e QDRANT_URL=http://host.docker.internal:6333 \
+  mahi-backend
 ```
 
 ### 3. Use Extension
