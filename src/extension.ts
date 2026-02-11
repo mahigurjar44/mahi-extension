@@ -1,13 +1,10 @@
 import * as vscode from 'vscode';
-import * as https from 'https';
 import * as http from 'http';
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('🚀 EXTENSION ACTIVATED');
     
     const provider = {
         resolveWebviewView(webviewView: vscode.WebviewView) {
-            console.log('🔧 WEBVIEW RESOLVING');
             
             webviewView.webview.options = { enableScripts: true };
             webviewView.webview.html = `
@@ -81,7 +78,6 @@ export function activate(context: vscode.ExtensionContext) {
                     </div>
                     
                     <script>
-                        console.log('📱 WEBVIEW SCRIPT LOADED');
                         const vscode = acquireVsCodeApi();
                         const messages = document.getElementById('messages');
                         const input = document.getElementById('input');
@@ -90,7 +86,6 @@ export function activate(context: vscode.ExtensionContext) {
                         let isThinking = false;
                         
                         function addMessage(text, isUser) {
-                            console.log('💬 Adding message:', text);
                             const div = document.createElement('div');
                             div.className = 'message ' + (isUser ? 'user' : 'ai');
                             div.textContent = text;
@@ -110,7 +105,6 @@ export function activate(context: vscode.ExtensionContext) {
                                 return;
                             }
                             
-                            console.log('📤 SEND CLICKED');
                             const text = input.value.trim();
                             if (!text) return;
                             
@@ -129,24 +123,20 @@ export function activate(context: vscode.ExtensionContext) {
                             send.textContent = 'Stop';
                             send.className = 'stop';
                             
-                            console.log('📡 POSTING MESSAGE:', text);
                             vscode.postMessage({ type: 'chat', message: text });
                         }
                         
                         send.onclick = function() {
-                            console.log('🖱️ BUTTON CLICKED');
                             sendMessage();
                         };
                         
                         input.onkeypress = function(e) {
                             if (e.key === 'Enter') {
-                                console.log('⌨️ ENTER PRESSED');
                                 sendMessage();
                             }
                         };
                         
                         window.addEventListener('message', function(event) {
-                            console.log('📨 RECEIVED:', event.data);
                             if (event.data.type === 'response') {
                                 // Remove thinking indicator and reset button
                                 const thinking = document.getElementById('thinking');
@@ -160,14 +150,12 @@ export function activate(context: vscode.ExtensionContext) {
                         });
                         
                         addMessage('🔥 MAHI AI Ready! Machine Assisted Human Intelligence at your service.', false);
-                        console.log('✅ WEBVIEW READY');
                     </script>
                 </body>
                 </html>
             `;
             
             webviewView.webview.onDidReceiveMessage(async message => {
-                console.log('📥 EXTENSION RECEIVED:', message);
                 if (message.type === 'chat') {
                     try {
                         // Use Node.js HTTP instead of fetch
@@ -196,10 +184,8 @@ export function activate(context: vscode.ExtensionContext) {
                                 try {
                                     const response = JSON.parse(data);
                                     const aiResponse = response.response || response.message || response.text || 'No response from AI';
-                                    console.log('📤 SENDING RESPONSE:', aiResponse);
                                     webviewView.webview.postMessage({ type: 'response', text: aiResponse });
                                 } catch (parseError) {
-                                    console.error('Parse error:', parseError);
                                     // Server returns plain text, not JSON
                                     webviewView.webview.postMessage({ type: 'response', text: data.trim() });
                                 }
@@ -207,7 +193,6 @@ export function activate(context: vscode.ExtensionContext) {
                         });
                         
                         req.on('error', (error) => {
-                            console.error('Request error:', error);
                             webviewView.webview.postMessage({ 
                                 type: 'response', 
                                 text: `Connection failed: ${error.message}. Is your server running on http://localhost:4000?` 
@@ -217,8 +202,7 @@ export function activate(context: vscode.ExtensionContext) {
                         req.write(postData);
                         req.end();
                         
-                    } catch (error) {
-                        console.error('LLM API Error:', error);
+                    } catch (error: any) {
                         webviewView.webview.postMessage({ 
                             type: 'response', 
                             text: `Error: ${error.message}` 
@@ -226,16 +210,12 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                 }
             });
-            
-            console.log('✅ WEBVIEW SETUP COMPLETE');
         }
     };
     
     context.subscriptions.push(
         vscode.window.registerWebviewViewProvider('mahiAIView', provider)
     );
-    
-    console.log('🎉 REGISTRATION COMPLETE');
 }
 
 export function deactivate() {}

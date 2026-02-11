@@ -9,12 +9,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mahi-ai/vscode-extension"
+    "url": "https://github.com/mahigurjar44/mahi-extension"
   },
   "bugs": {
-    "url": "https://github.com/mahi-ai/vscode-extension/issues"
+    "url": "https://github.com/mahigurjar44/mahi-extension/issues"
   },
-  "homepage": "https://github.com/mahi-ai/vscode-extension#readme",
+  "homepage": "https://github.com/mahigurjar44/mahi-extension#readme",
   "keywords": ["ai", "assistant", "chat", "llm", "coding", "mahi"],
   "categories": ["Other", "Machine Learning"],
   "engines": {
